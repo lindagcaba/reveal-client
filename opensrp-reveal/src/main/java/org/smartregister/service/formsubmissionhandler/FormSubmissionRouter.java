@@ -44,10 +44,7 @@ public class FormSubmissionRouter {
     private final Map<String, FormSubmissionHandler> handlerMap;
     private FormDataRepository formDataRepository;
 
-    public FormSubmissionRouter(FormDataRepository formDataRepository, ECRegistrationHandler
-            ecRegistrationHandler, FPComplicationsHandler fpComplicationsHandler, FPChangeHandler
-                                        fpChangeHandler, RenewFPProductHandler renewFPProductHandler, ECCloseHandler
-                                        ecCloseHandler, ANCRegistrationHandler ancRegistrationHandler,
+    public FormSubmissionRouter(FormDataRepository formDataRepository, ANCRegistrationHandler ancRegistrationHandler,
                                 ANCRegistrationOAHandler ancRegistrationOAHandler,
                                 ANCVisitHandler ancVisitHandler, ANCCloseHandler ancCloseHandler,
                                 TTHandler ttHandler, IFAHandler ifaHandler, HBTestHandler
@@ -65,11 +62,6 @@ public class FormSubmissionRouter {
                                         ancInvestigationsHandler) {
         this.formDataRepository = formDataRepository;
         handlerMap = new HashMap<String, FormSubmissionHandler>();
-        handlerMap.put(EC_REGISTRATION, ecRegistrationHandler);
-        handlerMap.put(FP_COMPLICATIONS, fpComplicationsHandler);
-        handlerMap.put(FP_CHANGE, fpChangeHandler);
-        handlerMap.put(RENEW_FP_PRODUCT, renewFPProductHandler);
-        handlerMap.put(EC_CLOSE, ecCloseHandler);
         handlerMap.put(ANC_REGISTRATION, ancRegistrationHandler);
         handlerMap.put(ANC_REGISTRATION_OA, ancRegistrationOAHandler);
         handlerMap.put(ANC_VISIT, ancVisitHandler);

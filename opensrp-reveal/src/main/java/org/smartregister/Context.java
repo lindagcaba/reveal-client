@@ -57,7 +57,6 @@ import org.smartregister.repository.TaskNotesRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.TimelineEventRepository;
 import org.smartregister.repository.UniqueIdRepository;
-import org.smartregister.reveal.api.RevealService;
 import org.smartregister.service.ANMService;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.AlertService;
@@ -65,7 +64,6 @@ import org.smartregister.service.AllFormVersionSyncService;
 import org.smartregister.service.BeneficiaryService;
 import org.smartregister.service.ChildService;
 import org.smartregister.service.DrishtiService;
-import org.smartregister.service.EligibleCoupleService;
 import org.smartregister.service.FormSubmissionService;
 import org.smartregister.service.FormSubmissionSyncService;
 import org.smartregister.service.HTTPAgent;
@@ -87,18 +85,13 @@ import org.smartregister.service.formsubmissionhandler.ChildRegistrationECHandle
 import org.smartregister.service.formsubmissionhandler.ChildRegistrationOAHandler;
 import org.smartregister.service.formsubmissionhandler.DeliveryOutcomeHandler;
 import org.smartregister.service.formsubmissionhandler.DeliveryPlanHandler;
-import org.smartregister.service.formsubmissionhandler.ECCloseHandler;
 import org.smartregister.service.formsubmissionhandler.ECEditHandler;
-import org.smartregister.service.formsubmissionhandler.ECRegistrationHandler;
-import org.smartregister.service.formsubmissionhandler.FPChangeHandler;
-import org.smartregister.service.formsubmissionhandler.FPComplicationsHandler;
 import org.smartregister.service.formsubmissionhandler.FormSubmissionRouter;
 import org.smartregister.service.formsubmissionhandler.HBTestHandler;
 import org.smartregister.service.formsubmissionhandler.IFAHandler;
 import org.smartregister.service.formsubmissionhandler.PNCCloseHandler;
 import org.smartregister.service.formsubmissionhandler.PNCRegistrationOAHandler;
 import org.smartregister.service.formsubmissionhandler.PNCVisitHandler;
-import org.smartregister.service.formsubmissionhandler.RenewFPProductHandler;
 import org.smartregister.service.formsubmissionhandler.TTHandler;
 import org.smartregister.service.formsubmissionhandler.VitaminAHandler;
 import org.smartregister.sync.SaveANMLocationTask;
@@ -156,7 +149,6 @@ public class Context {
     private ZiggyService ziggyService;
     private UserService userService;
     private AlertService alertService;
-    private EligibleCoupleService eligibleCoupleService;
     private MotherService motherService;
     private ChildService childService;
     private ANMService anmService;
@@ -178,11 +170,6 @@ public class Context {
     private HTTPAgent httpAgent;
     private ZiggyFileLoader ziggyFileLoader;
     private FormSubmissionRouter formSubmissionRouter;
-    private ECRegistrationHandler ecRegistrationHandler;
-    private FPComplicationsHandler fpComplicationsHandler;
-    private FPChangeHandler fpChangeHandler;
-    private RenewFPProductHandler renewFPProductHandler;
-    private ECCloseHandler ecCloseHandler;
     private ANCRegistrationHandler ancRegistrationHandler;
     private ANCRegistrationOAHandler ancRegistrationOAHandler;
     private ANCVisitHandler ancVisitHandler;
@@ -315,9 +302,7 @@ public class Context {
 
     public FormSubmissionRouter formSubmissionRouter() {
         if (formSubmissionRouter == null) {
-            formSubmissionRouter = new FormSubmissionRouter(formDataRepository(),
-                    ecRegistrationHandler(), fpComplicationsHandler(), fpChangeHandler(),
-                    renewFPProductHandler(), ecCloseHandler(), ancRegistrationHandler(),
+            formSubmissionRouter = new FormSubmissionRouter(formDataRepository(), ancRegistrationHandler(),
                     ancRegistrationOAHandler(), ancVisitHandler(), ancCloseHandler(), ttHandler(),
                     ifaHandler(), hbTestHandler(), deliveryOutcomeHandler(),
                     pncRegistrationOAHandler(), pncCloseHandler(), pncVisitHandler(),
@@ -334,41 +319,6 @@ public class Context {
             childCloseHandler = new ChildCloseHandler(childService());
         }
         return childCloseHandler;
-    }
-
-    private ECRegistrationHandler ecRegistrationHandler() {
-        if (ecRegistrationHandler == null) {
-            ecRegistrationHandler = new ECRegistrationHandler(eligibleCoupleService());
-        }
-        return ecRegistrationHandler;
-    }
-
-    private FPComplicationsHandler fpComplicationsHandler() {
-        if (fpComplicationsHandler == null) {
-            fpComplicationsHandler = new FPComplicationsHandler(eligibleCoupleService());
-        }
-        return fpComplicationsHandler;
-    }
-
-    private FPChangeHandler fpChangeHandler() {
-        if (fpChangeHandler == null) {
-            fpChangeHandler = new FPChangeHandler(eligibleCoupleService());
-        }
-        return fpChangeHandler;
-    }
-
-    private RenewFPProductHandler renewFPProductHandler() {
-        if (renewFPProductHandler == null) {
-            renewFPProductHandler = new RenewFPProductHandler(eligibleCoupleService());
-        }
-        return renewFPProductHandler;
-    }
-
-    private ECCloseHandler ecCloseHandler() {
-        if (ecCloseHandler == null) {
-            ecCloseHandler = new ECCloseHandler(eligibleCoupleService());
-        }
-        return ecCloseHandler;
     }
 
     private ANCRegistrationHandler ancRegistrationHandler() {
@@ -787,14 +737,6 @@ public class Context {
             serviceProvidedService = new ServiceProvidedService(allServicesProvided());
         }
         return serviceProvidedService;
-    }
-
-    public EligibleCoupleService eligibleCoupleService() {
-        if (eligibleCoupleService == null) {
-            eligibleCoupleService = new EligibleCoupleService(allEligibleCouples(),
-                    allTimelineEvents(), allBeneficiaries());
-        }
-        return eligibleCoupleService;
     }
 
     public MotherService motherService() {
