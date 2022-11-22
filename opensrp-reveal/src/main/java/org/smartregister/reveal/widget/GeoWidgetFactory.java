@@ -6,6 +6,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONEN
 import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.reveal.util.Utils.getSatelliteStyle;
 import static org.smartregister.reveal.util.Utils.isCurrentTargetLevelStructure;
 
 import android.app.Activity;
@@ -96,6 +97,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private GeoFencingValidator geoFencingValidator;
 
+    private  GeoJsonSource geoJsonSource;
+
     public GeoWidgetFactory() {
     }
 
@@ -117,7 +120,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 } else if ((validator instanceof GeoFencingValidator)
                         && !validator.isValid("", true)
                         && (Country.ZAMBIA == BuildConfig.BUILD_COUNTRY
-                        || Country.SENEGAL == BuildConfig.BUILD_COUNTRY || Country.SENEGAL_EN == BuildConfig.BUILD_COUNTRY )) {
+                        || Country.SENEGAL == BuildConfig.BUILD_COUNTRY || Country.SENEGAL_EN == BuildConfig.BUILD_COUNTRY ||  Country.MOZAMBIQUE == BuildConfig.BUILD_COUNTRY  )) {
                     // perform within op area validation
                     GeoFencingValidator geoFencingValidator = (GeoFencingValidator) validator;
                     int title = R.string.register_outside_boundary_title;
@@ -250,16 +253,16 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                String satelliteStyle = !org.smartregister.reveal.util.Utils.isCurrentTargetLevelStructure() ? context.getString(R.string.reveal_select_jurisdiction_style) : context.getString(R.string.reveal_satellite_style);
+                String satelliteStyle = getSatelliteStyle(context);
                 Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
 
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
-                        GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
+                        geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
 
                         if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
-                            geoJsonSource.setGeoJson(finalFeatureCollection);
+                            geoJsonSource.setGeoJson(FeatureCollection.fromJson(finalFeatureCollection));
                         }
 
                         String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
@@ -355,7 +358,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         addGeoFencingValidator(context);
         LocationRepository locationRepository = RevealApplication.getInstance().getLocationRepository();
         RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
-            String parentId = locationRepository.getLocationById(operationalAreaFeature.id()).getProperties().getParentId();
+            Location parentLocation = locationRepository.getLocationById(operationalAreaFeature.id());
+            String parentId = parentLocation != null ? parentLocation.getProperties().getParentId() : null;
             String operationalLevel = operationalAreaFeature.getStringProperty("geographicLevel");
             List<Location> allLocations = locationRepository.getAllLocations().stream()
                                                                               .filter(location -> (operationalLevel.equals(location.getProperties().getGeographicLevel()) || location.getProperties().getName().toLowerCase().contains(OTHER)))
@@ -473,6 +477,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         geoFencingValidator = new GeoFencingValidator(context.getString(R.string.register_outside_boundary_warning), mapView, operationalArea);
         mapView.addValidator(geoFencingValidator);
     }
+
 
     @Override
     public void onLocationComponentInitialized() {

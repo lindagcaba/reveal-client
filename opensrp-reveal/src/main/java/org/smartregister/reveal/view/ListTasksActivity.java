@@ -2,6 +2,9 @@ package org.smartregister.reveal.view;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.Action.HABITAT_SURVEY;
+import static org.smartregister.reveal.util.Constants.Action.LSM_HOUSEHOLD_SURVEY;
+import static org.smartregister.reveal.util.Constants.Action.MDA_SURVEY;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
@@ -30,6 +33,7 @@ import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundary
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getMaxZoomLevel;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.reveal.util.Utils.getSatelliteStyle;
 import static org.smartregister.reveal.util.Utils.getSyncEntityString;
 import static org.smartregister.reveal.util.Utils.isCurrentTargetLevelStructure;
 import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
@@ -115,6 +119,7 @@ import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.SurveyCardDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
@@ -138,8 +143,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback, SyncProgressBroadcastReceiver.SyncProgressListener, ValidateAssignmentReceiver.UserAssignmentListener {
 
     private ListTaskPresenter listTaskPresenter;
-
-    private View rootView;
 
     private GeoJsonSource geoJsonSource;
 
@@ -218,8 +221,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
 
-        rootView = findViewById(R.id.content_frame);
-
         initializeProgressIndicatorViews();
 
         kujakuMapView = findViewById(R.id.kujakuMapView);
@@ -269,6 +270,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         tvReason = findViewById(R.id.reason);
 
+        findViewById(R.id.change_household_status).setOnClickListener(this);
+        findViewById(R.id.change_lsm_household_status).setOnClickListener(this);
+        findViewById(R.id.change_habitat_status).setOnClickListener(this);
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
         findViewById(R.id.btn_undo_spray).setOnClickListener(this);
@@ -359,7 +363,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                 String satelliteStyle = !org.smartregister.reveal.util.Utils.isCurrentTargetLevelStructure()  ? getString(R.string.reveal_select_jurisdiction_style) : getString(R.string.reveal_satellite_style);
+                 String satelliteStyle = getSatelliteStyle(getContext());
                     Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
                     mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                         @Override
@@ -514,13 +518,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
+        } else if(v.getId() == R.id.change_household_status){
+            listTaskPresenter.onChangeInterventionStatus(MDA_SURVEY);
+        } else if(v.getId() == R.id.change_habitat_status){
+            listTaskPresenter.onChangeInterventionStatus(HABITAT_SURVEY);
+        } else if(v.getId() == R.id.change_lsm_household_status){
+            listTaskPresenter.onChangeInterventionStatus(LSM_HOUSEHOLD_SURVEY);
         } else if (v.getId() == R.id.btn_undo_spray) {
             if(isZambiaIRSLite()) {
                 displayResetInterventionTaskDialog(IRS_VERIFICATION);
             } else {
                 displayResetInterventionTaskDialog(IRS);
             }
-
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_undo_mosquito_collection) {
@@ -782,6 +791,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             cardDetailsUtil.populateAndOpenIRSVerificationCard((IRSVerificationCardDetails) cardDetails, this);
         } else if (cardDetails instanceof FamilyCardDetails) {
             cardDetailsUtil.populateFamilyCard((FamilyCardDetails) cardDetails, this);
+            sprayCardView.setVisibility(View.VISIBLE);
+        } else if(cardDetails instanceof SurveyCardDetails){
+            cardDetailsUtil.populateSurveyCard((SurveyCardDetails) cardDetails,this);
             sprayCardView.setVisibility(View.VISIBLE);
         }
     }

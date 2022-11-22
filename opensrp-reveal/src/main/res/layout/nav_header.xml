@@ -252,6 +252,19 @@
         app:layout_constraintTop_toBottomOf="@id/btn_navMenu_filled_forms" />
 
 
+    <TextView
+        android:id="@+id/btn_link_dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/link_to_dashboard"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_offline_maps" />
+
     <View
         android:id="@+id/header_separator"
         android:layout_width="match_parent"
@@ -261,7 +274,7 @@
         android:background="#DEDEDE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_offline_maps" />
+        app:layout_constraintTop_toBottomOf="@id/btn_link_dashboard" />
 
 
     <TextView
@@ -354,21 +367,18 @@
     <TextView
         android:id="@+id/operator_label"
         android:layout_width="0dp"
-        android:layout_height="0dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/operator_top_margin"
         android:gravity="bottom"
         android:text="Operator: "
         android:textColor="@color/text_gray"
-        app:layout_constraintBottom_toTopOf="@id/logout_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/facility_label"
         app:layout_constraintVertical_bias="0.9"
         app:layout_constraintVertical_weight="1" />
-
-
     <TextView
         android:id="@+id/logout_button"
         android:layout_width="wrap_content"
@@ -379,7 +389,6 @@
         android:text="@string/logout_text"
         android:textColor="@color/button_blue"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/operator_label"
         app:layout_constraintVertical_bias="0.9" />
@@ -391,7 +400,7 @@
         android:background="#DFDFDF"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="@dimen/divider_margin"
-        app:layout_constraintBottom_toTopOf="@id/application_version"
+        app:layout_constraintTop_toBottomOf="@id/logout_button"
         android:layout_marginEnd="@dimen/divider_margin"
         android:layout_marginBottom="10dp" />
 
@@ -413,5 +422,6 @@
         android:textColor="@color/text_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/application_version" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

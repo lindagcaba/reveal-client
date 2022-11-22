@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -33,8 +34,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.smartregister.CoreLibrary;
+import org.smartregister.DristhiConfiguration;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.reporting.view.ProgressIndicatorView;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -62,6 +65,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
+    private TextView dashboardLink;
 
     private DrawerLayout mDrawerLayout;
 
@@ -77,11 +81,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private ConstraintLayout syncStatsLayout;
 
+    private DristhiConfiguration configuration;
+
     public DrawerMenuView(BaseDrawerContract.DrawerActivity activity) {
         this.activity = activity;
         presenter = new BaseDrawerPresenter(this, activity);
         interactor = new BaseDrawerInteractor(presenter);
         planDefinitionRepository = RevealApplication.getInstance().getPlanDefinitionRepository();
+        configuration = CoreLibrary.getInstance().context().configuration();
     }
 
     @Override
@@ -163,6 +170,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         planTextView.setOnClickListener(this);
 
+        dashboardLink = headerView.findViewById(R.id.btn_link_dashboard);
+
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL || BuildConfig.BUILD_COUNTRY == Country.SENEGAL_EN || BuildConfig.BUILD_COUNTRY == Country.NIGERIA) { // Enable P2P sync and other forms
             p2pSyncTextView.setVisibility(View.VISIBLE);
             p2pSyncTextView.setOnClickListener(this);
@@ -185,6 +194,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             filledForms.setVisibility(View.VISIBLE);
             filledForms.setOnClickListener(this);
 
+            dashboardLink.setVisibility(View.VISIBLE);
+            dashboardLink.setOnClickListener(this);
         }
 
         offlineMapTextView.setVisibility(View.VISIBLE);
@@ -388,6 +399,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
             closeDrawerLayout();
+        } else if (v.getId() == R.id.btn_link_dashboard){
+            String dashboardURL = getBaseUrl().replace("api","reveal");
+            getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dashboardURL)));
         }
     }
 
@@ -483,5 +497,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void setViewVisibility(View view, boolean isVisible) {
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private String getBaseUrl(){
+        String baseUrl = configuration.dristhiBaseURL();
+        String endString = "/";
+        if (baseUrl.endsWith(endString)) {
+            baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(endString));
+        }
+        return baseUrl;
     }
 }

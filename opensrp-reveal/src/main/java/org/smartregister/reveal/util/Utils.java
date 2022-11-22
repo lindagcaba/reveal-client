@@ -218,8 +218,8 @@ public class Utils {
     }
 
     public static int getInterventionLabel() {
-        String plan = PreferencesUtil.getInstance().getCurrentPlan();
-        String interventionType = PreferencesUtil.getInstance().getInterventionTypeForPlan(plan);
+        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
+        String interventionType = PreferencesUtil.getInstance().getInterventionTypeForPlan(planId);
         if (interventionType.equals(FI) || interventionType.equals(DYNAMIC_FI))
             return R.string.focus_investigation;
         else if (interventionType.equals(IRS) || interventionType.equals(DYNAMIC_IRS))
@@ -589,7 +589,7 @@ public class Utils {
         return BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && isCurrentTargetLevelStructure();
     }
     public static boolean isMDALite(){
-       return Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) || Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY) || BuildConfig.BUILD_COUNTRY == Country.RWANDA_EN;
+       return Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) || Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY) || BuildConfig.BUILD_COUNTRY == Country.RWANDA_EN && !isCurrentTargetLevelStructure() ;
     }
     public static Integer getMaxSelectZoomLevel(){
         return Integer.valueOf(getGlobalConfig(CONFIGURATION.MAX_SELECT_ZOOM_LEVEL,String.valueOf(MAX_SELECT_ZOOM_LEVEL)));
@@ -617,9 +617,25 @@ public class Utils {
         bundle.putString(BUILD_COUNTRY,BuildConfig.BUILD_COUNTRY.name());
         bundle.putBoolean(ADMIN_PASSWORD_ENTERED,passwordEntered);
         sharedPreferences.savePreference(ADMIN_PASSWORD_ENTERED,String.valueOf(passwordEntered));
-        FirebaseAnalytics.getInstance(RevealApplication.getInstance().getApplicationContext()).logEvent(ADMIN_PASSWORD_REQUIRED,bundle);
     }
     public static boolean isCurrentTargetLevelStructure(){
         return STRUCTURE.equalsIgnoreCase(PreferencesUtil.getInstance().getCurrentPlanTargetLevel());
+    }
+
+    public static boolean buildCountryHasIndicators() {
+        return BuildConfig.BUILD_COUNTRY == Country.ZAMBIA
+                || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA
+                || BuildConfig.BUILD_COUNTRY == Country.SENEGAL
+                || BuildConfig.BUILD_COUNTRY == Country.RWANDA
+                || BuildConfig.BUILD_COUNTRY == Country.SENEGAL_EN
+                || BuildConfig.BUILD_COUNTRY == Country.RWANDA_EN
+                || BuildConfig.BUILD_COUNTRY == Country.NIGERIA
+                || BuildConfig.BUILD_COUNTRY == Country.KENYA;
+    }
+
+
+    @NonNull
+    public static String getSatelliteStyle(Context context) {
+        return org.smartregister.reveal.util.Utils.isCurrentTargetLevelStructure() ? context.getString(R.string.reveal_satellite_style) :  ( org.smartregister.reveal.util.Utils.isKenyaMDALite() ? context.getString(R.string.reveal_mda_lite_style) : context.getString(R.string.reveal_select_jurisdiction_style));
     }
 }
