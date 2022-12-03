@@ -27,14 +27,12 @@ import org.smartregister.commonregistry.CommonRepositoryInformationHolder;
 import org.smartregister.domain.ColumnDetails;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.repository.AllAlerts;
-import org.smartregister.repository.AllBeneficiaries;
 import org.smartregister.repository.AllEligibleCouples;
 import org.smartregister.repository.AllReports;
 import org.smartregister.repository.AllServicesProvided;
 import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.AllTimelineEvents;
-import org.smartregister.repository.ChildRepository;
 import org.smartregister.repository.ClientFormRepository;
 import org.smartregister.repository.ClientRelationshipRepository;
 import org.smartregister.repository.DetailsRepository;
@@ -47,7 +45,6 @@ import org.smartregister.repository.ImageRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.LocationTagRepository;
 import org.smartregister.repository.ManifestRepository;
-import org.smartregister.repository.MotherRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.ReportRepository;
 import org.smartregister.repository.ServiceProvidedRepository;
@@ -57,43 +54,21 @@ import org.smartregister.repository.TaskNotesRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.TimelineEventRepository;
 import org.smartregister.repository.UniqueIdRepository;
-import org.smartregister.service.ANMService;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.AlertService;
 import org.smartregister.service.AllFormVersionSyncService;
-import org.smartregister.service.BeneficiaryService;
-import org.smartregister.service.ChildService;
 import org.smartregister.service.DrishtiService;
 import org.smartregister.service.FormSubmissionService;
 import org.smartregister.service.FormSubmissionSyncService;
 import org.smartregister.service.HTTPAgent;
-import org.smartregister.service.MotherService;
 import org.smartregister.service.PendingFormSubmissionService;
 import org.smartregister.service.ServiceProvidedService;
 import org.smartregister.service.UserService;
 import org.smartregister.service.ZiggyFileLoader;
 import org.smartregister.service.ZiggyService;
-import org.smartregister.service.formsubmissionhandler.ANCCloseHandler;
 import org.smartregister.service.formsubmissionhandler.ANCInvestigationsHandler;
-import org.smartregister.service.formsubmissionhandler.ANCRegistrationHandler;
-import org.smartregister.service.formsubmissionhandler.ANCRegistrationOAHandler;
-import org.smartregister.service.formsubmissionhandler.ANCVisitHandler;
-import org.smartregister.service.formsubmissionhandler.ChildCloseHandler;
-import org.smartregister.service.formsubmissionhandler.ChildIllnessHandler;
-import org.smartregister.service.formsubmissionhandler.ChildImmunizationsHandler;
-import org.smartregister.service.formsubmissionhandler.ChildRegistrationECHandler;
-import org.smartregister.service.formsubmissionhandler.ChildRegistrationOAHandler;
-import org.smartregister.service.formsubmissionhandler.DeliveryOutcomeHandler;
-import org.smartregister.service.formsubmissionhandler.DeliveryPlanHandler;
 import org.smartregister.service.formsubmissionhandler.ECEditHandler;
 import org.smartregister.service.formsubmissionhandler.FormSubmissionRouter;
-import org.smartregister.service.formsubmissionhandler.HBTestHandler;
-import org.smartregister.service.formsubmissionhandler.IFAHandler;
-import org.smartregister.service.formsubmissionhandler.PNCCloseHandler;
-import org.smartregister.service.formsubmissionhandler.PNCRegistrationOAHandler;
-import org.smartregister.service.formsubmissionhandler.PNCVisitHandler;
-import org.smartregister.service.formsubmissionhandler.TTHandler;
-import org.smartregister.service.formsubmissionhandler.VitaminAHandler;
 import org.smartregister.sync.SaveANMLocationTask;
 import org.smartregister.sync.SaveANMTeamTask;
 import org.smartregister.sync.SaveUserInfoTask;
@@ -109,7 +84,6 @@ import org.smartregister.view.contract.HomeContext;
 import org.smartregister.view.contract.SmartRegisterClients;
 import org.smartregister.view.contract.Villages;
 import org.smartregister.view.contract.pnc.PNCClients;
-import org.smartregister.view.controller.ANMController;
 import org.smartregister.view.controller.ANMLocationController;
 import timber.log.Timber;
 
@@ -124,9 +98,7 @@ public class Context {
     private EligibleCoupleRepository eligibleCoupleRepository;
     private AlertRepository alertRepository;
     private SettingsRepository settingsRepository;
-    private ChildRepository childRepository;
     private DetailsRepository detailsRepository;
-    private MotherRepository motherRepository;
     private TimelineEventRepository timelineEventRepository;
     private ReportRepository reportRepository;
     private FormDataRepository formDataRepository;
@@ -136,7 +108,6 @@ public class Context {
     private AllSharedPreferences allSharedPreferences;
     private AllAlerts allAlerts;
     private AllEligibleCouples allEligibleCouples;
-    private AllBeneficiaries allBeneficiaries;
     private AllTimelineEvents allTimelineEvents;
     private AllReports allReports;
     private AllServicesProvided allServicesProvided;
@@ -149,10 +120,6 @@ public class Context {
     private ZiggyService ziggyService;
     private UserService userService;
     private AlertService alertService;
-    private MotherService motherService;
-    private ChildService childService;
-    private ANMService anmService;
-    private BeneficiaryService beneficiaryService;
     private ServiceProvidedService serviceProvidedService;
     private PendingFormSubmissionService pendingFormSubmissionService;
     private AllFormVersionSyncService allFormVersionSyncService;
@@ -170,30 +137,11 @@ public class Context {
     private HTTPAgent httpAgent;
     private ZiggyFileLoader ziggyFileLoader;
     private FormSubmissionRouter formSubmissionRouter;
-    private ANCRegistrationHandler ancRegistrationHandler;
-    private ANCRegistrationOAHandler ancRegistrationOAHandler;
-    private ANCVisitHandler ancVisitHandler;
-    private ANCCloseHandler ancCloseHandler;
-    private TTHandler ttHandler;
-    private IFAHandler ifaHandler;
-    private HBTestHandler hbTestHandler;
-    private DeliveryOutcomeHandler deliveryOutcomeHandler;
-    private DeliveryPlanHandler deliveryPlanHandler;
-    private PNCRegistrationOAHandler pncRegistrationOAHandler;
-    private PNCCloseHandler pncCloseHandler;
-    private PNCVisitHandler pncVisitHandler;
-    private ChildImmunizationsHandler childImmunizationsHandler;
-    private ChildRegistrationECHandler childRegistrationECHandler;
-    private ChildRegistrationOAHandler childRegistrationOAHandler;
-    private ChildCloseHandler childCloseHandler;
-    private ChildIllnessHandler childIllnessHandler;
-    private VitaminAHandler vitaminAHandler;
     private ECEditHandler ecEditHandler;
     private ANCInvestigationsHandler ancInvestigationsHandler;
     private SaveANMLocationTask saveANMLocationTask;
     private SaveUserInfoTask saveUserInfoTask;
     private SaveANMTeamTask saveANMTeamTask;
-    private ANMController anmController;
     private ANMLocationController anmLocationController;
     private CommonFtsObject commonFtsObject;
     private Map<String, String> customHumanReadableConceptResponse;
@@ -252,13 +200,6 @@ public class Context {
         }
     }
 
-    public BeneficiaryService beneficiaryService() {
-        if (beneficiaryService == null) {
-            beneficiaryService = new BeneficiaryService(allEligibleCouples(), allBeneficiaries());
-        }
-        return beneficiaryService;
-    }
-
     public Context updateApplicationContext(android.content.Context applicationContext) {
         this.applicationContext = applicationContext;
         return this;
@@ -302,143 +243,13 @@ public class Context {
 
     public FormSubmissionRouter formSubmissionRouter() {
         if (formSubmissionRouter == null) {
-            formSubmissionRouter = new FormSubmissionRouter(formDataRepository(), ancRegistrationHandler(),
-                    ancRegistrationOAHandler(), ancVisitHandler(), ancCloseHandler(), ttHandler(),
-                    ifaHandler(), hbTestHandler(), deliveryOutcomeHandler(),
-                    pncRegistrationOAHandler(), pncCloseHandler(), pncVisitHandler(),
-                    childImmunizationsHandler(), childRegistrationECHandler(),
-                    childRegistrationOAHandler(), childCloseHandler(), childIllnessHandler(),
-                    vitaminAHandler(), deliveryPlanHandler(), ecEditHandler(),
+            formSubmissionRouter = new FormSubmissionRouter(formDataRepository(),
+                     ecEditHandler(),
                     ancInvestigationsHandler());
         }
         return formSubmissionRouter;
     }
 
-    private ChildCloseHandler childCloseHandler() {
-        if (childCloseHandler == null) {
-            childCloseHandler = new ChildCloseHandler(childService());
-        }
-        return childCloseHandler;
-    }
-
-    private ANCRegistrationHandler ancRegistrationHandler() {
-        if (ancRegistrationHandler == null) {
-            ancRegistrationHandler = new ANCRegistrationHandler(motherService());
-        }
-        return ancRegistrationHandler;
-    }
-
-    private ANCRegistrationOAHandler ancRegistrationOAHandler() {
-        if (ancRegistrationOAHandler == null) {
-            ancRegistrationOAHandler = new ANCRegistrationOAHandler(motherService());
-        }
-        return ancRegistrationOAHandler;
-    }
-
-    private ANCVisitHandler ancVisitHandler() {
-        if (ancVisitHandler == null) {
-            ancVisitHandler = new ANCVisitHandler(motherService());
-        }
-        return ancVisitHandler;
-    }
-
-    private ANCCloseHandler ancCloseHandler() {
-        if (ancCloseHandler == null) {
-            ancCloseHandler = new ANCCloseHandler(motherService());
-        }
-        return ancCloseHandler;
-    }
-
-    private TTHandler ttHandler() {
-        if (ttHandler == null) {
-            ttHandler = new TTHandler(motherService());
-        }
-        return ttHandler;
-    }
-
-    private IFAHandler ifaHandler() {
-        if (ifaHandler == null) {
-            ifaHandler = new IFAHandler(motherService());
-        }
-        return ifaHandler;
-    }
-
-    private HBTestHandler hbTestHandler() {
-        if (hbTestHandler == null) {
-            hbTestHandler = new HBTestHandler(motherService());
-        }
-        return hbTestHandler;
-    }
-
-    private DeliveryOutcomeHandler deliveryOutcomeHandler() {
-        if (deliveryOutcomeHandler == null) {
-            deliveryOutcomeHandler = new DeliveryOutcomeHandler(motherService(), childService());
-        }
-        return deliveryOutcomeHandler;
-    }
-
-    private DeliveryPlanHandler deliveryPlanHandler() {
-        if (deliveryPlanHandler == null) {
-            deliveryPlanHandler = new DeliveryPlanHandler(motherService());
-        }
-        return deliveryPlanHandler;
-    }
-
-    private PNCRegistrationOAHandler pncRegistrationOAHandler() {
-        if (pncRegistrationOAHandler == null) {
-            pncRegistrationOAHandler = new PNCRegistrationOAHandler(childService());
-        }
-        return pncRegistrationOAHandler;
-    }
-
-    private PNCCloseHandler pncCloseHandler() {
-        if (pncCloseHandler == null) {
-            pncCloseHandler = new PNCCloseHandler(motherService());
-        }
-        return pncCloseHandler;
-    }
-
-    private PNCVisitHandler pncVisitHandler() {
-        if (pncVisitHandler == null) {
-            pncVisitHandler = new PNCVisitHandler(motherService(), childService());
-        }
-        return pncVisitHandler;
-    }
-
-    private ChildImmunizationsHandler childImmunizationsHandler() {
-        if (childImmunizationsHandler == null) {
-            childImmunizationsHandler = new ChildImmunizationsHandler(childService());
-        }
-        return childImmunizationsHandler;
-    }
-
-    private ChildIllnessHandler childIllnessHandler() {
-        if (childIllnessHandler == null) {
-            childIllnessHandler = new ChildIllnessHandler(childService());
-        }
-        return childIllnessHandler;
-    }
-
-    private VitaminAHandler vitaminAHandler() {
-        if (vitaminAHandler == null) {
-            vitaminAHandler = new VitaminAHandler(childService());
-        }
-        return vitaminAHandler;
-    }
-
-    private ChildRegistrationECHandler childRegistrationECHandler() {
-        if (childRegistrationECHandler == null) {
-            childRegistrationECHandler = new ChildRegistrationECHandler(childService());
-        }
-        return childRegistrationECHandler;
-    }
-
-    private ChildRegistrationOAHandler childRegistrationOAHandler() {
-        if (childRegistrationOAHandler == null) {
-            childRegistrationOAHandler = new ChildRegistrationOAHandler(childService());
-        }
-        return childRegistrationOAHandler;
-    }
 
     private ECEditHandler ecEditHandler() {
         if (ecEditHandler == null) {
@@ -492,9 +303,7 @@ public class Context {
         drishtiRepositoryList.add(settingsRepository());
         drishtiRepositoryList.add(alertRepository());
         drishtiRepositoryList.add(eligibleCoupleRepository());
-        drishtiRepositoryList.add(childRepository());
         drishtiRepositoryList.add(timelineEventRepository());
-        drishtiRepositoryList.add(motherRepository());
         drishtiRepositoryList.add(reportRepository());
         drishtiRepositoryList.add(formDataRepository());
         drishtiRepositoryList.add(serviceProvidedRepository());
@@ -577,14 +386,6 @@ public class Context {
         return sharedPreferences;
     }
 
-    public AllBeneficiaries allBeneficiaries() {
-        if (allBeneficiaries == null) {
-            allBeneficiaries = new AllBeneficiaries(motherRepository(), childRepository(),
-                    alertRepository(), timelineEventRepository());
-        }
-        return allBeneficiaries;
-    }
-
     public AllTimelineEvents allTimelineEvents() {
         if (allTimelineEvents == null) {
             allTimelineEvents = new AllTimelineEvents(timelineEventRepository());
@@ -627,25 +428,13 @@ public class Context {
         return settingsRepository;
     }
 
-    private ChildRepository childRepository() {
-        if (childRepository == null) {
-            childRepository = new ChildRepository();
-        }
-        return childRepository;
-    }
+
 
     public DetailsRepository detailsRepository() {
         if (detailsRepository == null) {
             detailsRepository = new DetailsRepository();
         }
         return detailsRepository;
-    }
-
-    private MotherRepository motherRepository() {
-        if (motherRepository == null) {
-            motherRepository = new MotherRepository();
-        }
-        return motherRepository;
     }
 
     protected TimelineEventRepository timelineEventRepository() {
@@ -739,35 +528,13 @@ public class Context {
         return serviceProvidedService;
     }
 
-    public MotherService motherService() {
-        if (motherService == null) {
-            motherService = new MotherService(allBeneficiaries(), allEligibleCouples(),
-                    allTimelineEvents(), serviceProvidedService());
-        }
-        return motherService;
-    }
 
-    public ChildService childService() {
-        if (childService == null) {
-            childService = new ChildService(allBeneficiaries(), motherRepository(),
-                    childRepository(), allTimelineEvents(), serviceProvidedService(), allAlerts());
-        }
-        return childService;
-    }
 
     public Session session() {
         if (session == null) {
             session = new Session();
         }
         return session;
-    }
-
-    public ANMService anmService() {
-        if (anmService == null) {
-            anmService = new ANMService(allSharedPreferences(), allBeneficiaries(),
-                    allEligibleCouples());
-        }
-        return anmService;
     }
 
     public Cache<String> listCache() {
@@ -807,13 +574,6 @@ public class Context {
             pendingFormSubmissionService = new PendingFormSubmissionService(formDataRepository());
         }
         return pendingFormSubmissionService;
-    }
-
-    public ANMController anmController() {
-        if (anmController == null) {
-            anmController = new ANMController(anmService(), listCache(), homeContextCache());
-        }
-        return anmController;
     }
 
     public ANMLocationController anmLocationController() {

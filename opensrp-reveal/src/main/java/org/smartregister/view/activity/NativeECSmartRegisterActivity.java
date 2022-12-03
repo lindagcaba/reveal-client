@@ -10,7 +10,6 @@ import org.smartregister.provider.ECSmartRegisterClientsProvider;
 import org.smartregister.provider.SmartRegisterClientsProvider;
 import org.smartregister.view.contract.ECClient;
 import org.smartregister.view.contract.SmartRegisterClient;
-import org.smartregister.view.controller.ECSmartRegisterController;
 import org.smartregister.view.controller.VillageController;
 import org.smartregister.view.dialog.AllClientsFilter;
 import org.smartregister.view.dialog.AllEligibleCoupleServiceMode;

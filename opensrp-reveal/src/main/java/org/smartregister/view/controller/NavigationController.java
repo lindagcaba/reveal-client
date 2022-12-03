@@ -11,11 +11,9 @@ import static org.smartregister.view.controller.ProfileNavigationController.navi
 
 public class NavigationController {
     private Activity activity;
-    private ANMController anmController;
 
-    public NavigationController(Activity activity, ANMController anmController) {
+    public NavigationController(Activity activity) {
         this.activity = activity;
-        this.anmController = anmController;
     }
 
     public void startReports() {
@@ -46,9 +44,6 @@ public class NavigationController {
 //        activity.startActivity(new Intent(activity, NativeChildSmartRegisterActivity.class));
     }
 
-    public String get() {
-        return anmController.get();
-    }
 
     public void goBack() {
         activity.finish();

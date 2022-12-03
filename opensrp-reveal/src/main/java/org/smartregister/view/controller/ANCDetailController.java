@@ -14,7 +14,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.smartregister.AllConstants;
 import org.smartregister.domain.EligibleCouple;
 import org.smartregister.domain.Mother;
-import org.smartregister.repository.AllBeneficiaries;
 import org.smartregister.repository.AllEligibleCouples;
 import org.smartregister.repository.AllTimelineEvents;
 import org.smartregister.util.DateUtil;

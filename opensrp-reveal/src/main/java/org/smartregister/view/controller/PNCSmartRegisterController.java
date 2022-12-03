@@ -8,7 +8,6 @@ import org.smartregister.domain.Child;
 import org.smartregister.domain.EligibleCouple;
 import org.smartregister.domain.Mother;
 import org.smartregister.domain.ServiceProvided;
-import org.smartregister.repository.AllBeneficiaries;
 import org.smartregister.repository.AllEligibleCouples;
 import org.smartregister.service.AlertService;
 import org.smartregister.service.ServiceProvidedService;

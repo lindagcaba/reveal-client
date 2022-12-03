@@ -11,12 +11,10 @@ import org.smartregister.reveal.R;
 import org.smartregister.view.contract.ECSmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
-import org.smartregister.view.controller.ECSmartRegisterController;
 import org.smartregister.view.dialog.FilterOption;
 import org.smartregister.view.dialog.ServiceModeOption;
 import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.ECProfilePhotoLoader;
-import org.smartregister.view.viewholder.NativeECSmartRegisterViewHolder;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 import org.smartregister.view.viewholder.ProfilePhotoLoader;
 
@@ -34,14 +32,11 @@ public class ECSmartRegisterClientsProvider implements SmartRegisterClientsProvi
     private final int txtColorBlack;
     private final AbsListView.LayoutParams clientViewLayoutParams;
 
-    protected ECSmartRegisterController controller;
 
     private Drawable iconPencilDrawable;
 
-    public ECSmartRegisterClientsProvider(Context context, View.OnClickListener onClickListener,
-                                          ECSmartRegisterController controller) {
+    public ECSmartRegisterClientsProvider(Context context, View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
-        this.controller = controller;
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

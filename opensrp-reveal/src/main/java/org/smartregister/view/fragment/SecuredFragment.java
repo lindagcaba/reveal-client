@@ -21,7 +21,6 @@ import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.activity.FormActivity;
 import org.smartregister.view.activity.MicroFormActivity;
 import org.smartregister.view.activity.SecuredActivity;
-import org.smartregister.view.controller.ANMController;
 import org.smartregister.view.controller.FormController;
 import org.smartregister.view.controller.NavigationController;
 
@@ -35,7 +34,6 @@ public abstract class SecuredFragment extends Fragment {
 
     protected Listener<Boolean> logoutListener;
     protected FormController formController;
-    protected ANMController anmController;
     protected NavigationController navigationController;
     private String metaData;
     private boolean isPaused;
@@ -60,8 +58,7 @@ public abstract class SecuredFragment extends Fragment {
         if (getActivity() instanceof SecuredActivity) {
             formController = new FormController(( SecuredActivity ) getActivity());
         }
-        anmController = context().anmController();
-        navigationController = new NavigationController(getActivity(), anmController);
+        navigationController = new NavigationController(getActivity());
         onCreation();
     }
 

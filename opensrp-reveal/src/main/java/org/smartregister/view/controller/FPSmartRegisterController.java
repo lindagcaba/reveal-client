@@ -2,7 +2,6 @@ package org.smartregister.view.controller;
 
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.EligibleCouple;
-import org.smartregister.repository.AllBeneficiaries;
 import org.smartregister.repository.AllEligibleCouples;
 import org.smartregister.service.AlertService;
 import org.smartregister.util.Cache;

@@ -5,7 +5,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import org.smartregister.CoreLibrary;
-import org.smartregister.repository.AllBeneficiaries;
 import org.smartregister.repository.DetailsRepository;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
