@@ -5,7 +5,6 @@ import android.content.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.DownloadStatus;
 import org.smartregister.domain.FetchStatus;
-import org.smartregister.service.ActionService;
 import org.smartregister.service.AllFormVersionSyncService;
 import org.smartregister.service.FormSubmissionSyncService;
 import org.smartregister.util.Utils;

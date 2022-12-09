@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import org.smartregister.CoreLibrary;
 import org.smartregister.job.ValidateSyncDataServiceJob;
-import org.smartregister.service.ActionService;
 import org.smartregister.util.NetworkUtils;
 
 import timber.log.Timber;

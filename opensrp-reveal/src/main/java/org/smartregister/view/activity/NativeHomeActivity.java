@@ -14,7 +14,6 @@ import org.smartregister.sync.SyncProgressIndicator;
 import org.smartregister.sync.UpdateActionsTask;
 import org.smartregister.view.contract.HomeContext;
 import org.smartregister.view.controller.NativeAfterANMDetailsFetchListener;
-import org.smartregister.view.controller.NativeUpdateANMDetailsTask;
 
 import static java.lang.String.valueOf;
 import static org.smartregister.event.Event.ACTION_HANDLED;

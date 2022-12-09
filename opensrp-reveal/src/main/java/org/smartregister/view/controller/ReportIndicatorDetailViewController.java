@@ -6,7 +6,6 @@ import android.content.Intent;
 import com.google.gson.Gson;
 
 import org.ei.drishti.dto.MonthSummaryDatum;
-import org.smartregister.domain.Report;
 import org.smartregister.view.activity.ReportIndicatorCaseListActivity;
 import org.smartregister.view.contract.IndicatorReportDetail;
 

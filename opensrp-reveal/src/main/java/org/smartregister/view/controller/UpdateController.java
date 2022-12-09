@@ -36,15 +36,4 @@ public class UpdateController {
         webView = null;
     }
 
-    public void updateANMDetails() {
-        UpdateANMDetailsTask task = new UpdateANMDetailsTask(CoreLibrary.getInstance().context().anmController());
-        task.fetch(new AfterANMDetailsFetchListener() {
-            @Override
-            public void afterFetch(String anmDetails) {
-                if (webView != null) {
-                    webView.loadUrl("javascript:pageView.updateANMDetails('" + anmDetails + "')");
-                }
-            }
-        });
-    }
 }

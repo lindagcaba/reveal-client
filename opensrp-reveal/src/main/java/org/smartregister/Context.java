@@ -28,7 +28,6 @@ import org.smartregister.domain.ColumnDetails;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.repository.AllAlerts;
 import org.smartregister.repository.AllEligibleCouples;
-import org.smartregister.repository.AllReports;
 import org.smartregister.repository.AllServicesProvided;
 import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
@@ -46,7 +45,6 @@ import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.LocationTagRepository;
 import org.smartregister.repository.ManifestRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
-import org.smartregister.repository.ReportRepository;
 import org.smartregister.repository.ServiceProvidedRepository;
 import org.smartregister.repository.SettingsRepository;
 import org.smartregister.repository.StructureRepository;
@@ -54,7 +52,6 @@ import org.smartregister.repository.TaskNotesRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.TimelineEventRepository;
 import org.smartregister.repository.UniqueIdRepository;
-import org.smartregister.service.ActionService;
 import org.smartregister.service.AlertService;
 import org.smartregister.service.AllFormVersionSyncService;
 import org.smartregister.service.DrishtiService;
@@ -100,7 +97,6 @@ public class Context {
     private SettingsRepository settingsRepository;
     private DetailsRepository detailsRepository;
     private TimelineEventRepository timelineEventRepository;
-    private ReportRepository reportRepository;
     private FormDataRepository formDataRepository;
     private ServiceProvidedRepository serviceProvidedRepository;
     private FormsVersionRepository formsVersionRepository;
@@ -109,12 +105,10 @@ public class Context {
     private AllAlerts allAlerts;
     private AllEligibleCouples allEligibleCouples;
     private AllTimelineEvents allTimelineEvents;
-    private AllReports allReports;
     private AllServicesProvided allServicesProvided;
     private AllCommonsRepository allCommonPersonObjectsRepository;
     private ImageRepository imageRepository;
     private DrishtiService drishtiService;
-    private ActionService actionService;
     private FormSubmissionService formSubmissionService;
     private FormSubmissionSyncService formSubmissionSyncService;
     private ZiggyService ziggyService;
@@ -212,13 +206,6 @@ public class Context {
         return drishtiService;
     }
 
-    public ActionService actionService() {
-        if (actionService == null) {
-            actionService = new ActionService(drishtiService(), allSettings(),
-                    allSharedPreferences(), allReports());
-        }
-        return actionService;
-    }
 
     public FormSubmissionService formSubmissionService() {
         if (formSubmissionService == null) {
@@ -304,7 +291,6 @@ public class Context {
         drishtiRepositoryList.add(alertRepository());
         drishtiRepositoryList.add(eligibleCoupleRepository());
         drishtiRepositoryList.add(timelineEventRepository());
-        drishtiRepositoryList.add(reportRepository());
         drishtiRepositoryList.add(formDataRepository());
         drishtiRepositoryList.add(serviceProvidedRepository());
         drishtiRepositoryList.add(formsVersionRepository());
@@ -393,13 +379,6 @@ public class Context {
         return allTimelineEvents;
     }
 
-    public AllReports allReports() {
-        if (allReports == null) {
-            allReports = new AllReports(reportRepository());
-        }
-        return allReports;
-    }
-
     public AllServicesProvided allServicesProvided() {
         if (allServicesProvided == null) {
             allServicesProvided = new AllServicesProvided(serviceProvidedRepository());
@@ -444,12 +423,6 @@ public class Context {
         return timelineEventRepository;
     }
 
-    private ReportRepository reportRepository() {
-        if (reportRepository == null) {
-            reportRepository = new ReportRepository();
-        }
-        return reportRepository;
-    }
 
     public FormDataRepository formDataRepository() {
         if (formDataRepository == null) {

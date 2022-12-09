@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.smartregister.domain.ReportIndicator;
 import org.smartregister.view.contract.Beneficiary;
 import org.smartregister.view.contract.IndicatorReportCases;
 

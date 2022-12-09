@@ -29,7 +29,6 @@ import org.smartregister.receiver.P2pProcessingStatusBroadcastReceiver;
 import org.smartregister.service.ZiggyService;
 import org.smartregister.util.Utils;
 import org.smartregister.view.controller.FormController;
-import org.smartregister.view.controller.NavigationController;
 import org.smartregister.view.customcontrols.ProcessingInProgressSnackbar;
 
 import java.util.Map;
@@ -51,7 +50,6 @@ public abstract class SecuredActivity extends MultiLanguageActivity implements P
     protected final int MENU_ITEM_LOGOUT = 2312;
     protected Listener<Boolean> logoutListener;
     protected FormController formController;
-    protected NavigationController navigationController;
     protected ZiggyService ziggyService;
     private String metaData;
     private OpenSRPClientBroadCastReceiver openSRPClientBroadCastReceiver;
@@ -79,8 +77,6 @@ public abstract class SecuredActivity extends MultiLanguageActivity implements P
         }
 
         formController = new FormController(this);
-        anmController = context().anmController();
-        navigationController = new NavigationController(this, anmController);
         onCreation();
 
         // Intent replicationServiceIntent = new Intent(this, ReplicationIntentService.class);
