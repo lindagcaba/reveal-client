@@ -66,39 +66,9 @@ public class NativeHomeActivity extends SecuredActivity {
 
         @Override
         public void onClick(View view) {
-            int i = view.getId();
-            if (i == R.id.btn_ec_register) {
-                navigationController.startECSmartRegistry();
-
-            } else if (i == R.id.btn_anc_register) {
-                navigationController.startANCSmartRegistry();
-
-            } else if (i == R.id.btn_pnc_register) {
-                navigationController.startPNCSmartRegistry();
-
-            } else if (i == R.id.btn_child_register) {
-                navigationController.startChildSmartRegistry();
-
-            } else if (i == R.id.btn_fp_register) {
-                navigationController.startFPSmartRegistry();
-
-            }
         }
     };
-    private View.OnClickListener onButtonsClickListener = new View.OnClickListener() {
 
-        @Override
-        public void onClick(View view) {
-            int i = view.getId();
-            if (i == R.id.btn_reporting) {
-                navigationController.startReports();
-
-            } else if (i == R.id.btn_videos) {
-                navigationController.startVideos();
-
-            }
-        }
-    };
 
     @Override
     protected void onCreation() {
@@ -114,8 +84,6 @@ public class NativeHomeActivity extends SecuredActivity {
         findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
         findViewById(R.id.btn_child_register).setOnClickListener(onRegisterStartListener);
 
-        findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
-        findViewById(R.id.btn_videos).setOnClickListener(onButtonsClickListener);
 
         ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
         pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
@@ -141,14 +109,6 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void updateRegisterCounts() {
-        NativeUpdateANMDetailsTask task = new NativeUpdateANMDetailsTask(
-                CoreLibrary.getInstance().context().anmController());
-        task.fetch(new NativeAfterANMDetailsFetchListener() {
-            @Override
-            public void afterFetch(HomeContext anmDetails) {
-                updateRegisterCounts(anmDetails);
-            }
-        });
     }
 
     private void updateRegisterCounts(HomeContext homeContext) {
@@ -182,7 +142,7 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     public void updateFromServer() {
-        UpdateActionsTask updateActionsTask = new UpdateActionsTask(this, context().actionService(),
+        UpdateActionsTask updateActionsTask = new UpdateActionsTask(this,
                 context().formSubmissionSyncService(), new SyncProgressIndicator(),
                 context().allFormVersionSyncService());
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());

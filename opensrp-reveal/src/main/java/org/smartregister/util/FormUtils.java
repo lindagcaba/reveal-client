@@ -234,7 +234,6 @@ public class FormUtils {
                                                                String formName) {
         org.smartregister.clientandeventmodel.FormSubmission v2FormSubmission;
 
-        String anmId = CoreLibrary.getInstance().context().anmService().fetchDetails().name();
         String instanceId = formSubmission.instanceId();
         String entityId = formSubmission.entityId();
         Long clientVersion = new Date().getTime();
@@ -253,7 +252,7 @@ public class FormUtils {
         FormInstance formInstance = new FormInstance(formData);
         formInstance.setForm_data_definition_version(formDataDefinitionVersion);
 
-        v2FormSubmission = new org.smartregister.clientandeventmodel.FormSubmission(anmId,
+        v2FormSubmission = new org.smartregister.clientandeventmodel.FormSubmission(null,
                 instanceId, formName, entityId, clientVersion, formDataDefinitionVersion,
                 formInstance, clientVersion);
 

@@ -375,12 +375,6 @@ public abstract class SecuredNativeSmartRegisterActivity extends SecuredActivity
 
     protected abstract void onInitialization();
 
-    public abstract void startRegistration();
-
-    public void saveFormSubmission(String formSubmision, String id, String formName, JSONObject
-            fieldOverrides) {
-        Timber.i("Override this method in child class");
-    }
 
     protected String getParams(FormSubmission submission) {
         return new Gson().toJson(create(INSTANCE_ID_PARAM, submission.instanceId())
@@ -613,9 +607,6 @@ public abstract class SecuredNativeSmartRegisterActivity extends SecuredActivity
             int i = view.getId();
             if (i == R.id.title_layout || i == R.id.btn_back_to_home) {
                 goBack();
-
-            } else if (i == R.id.register_client) {
-                startRegistration();
 
             } else if (i == R.id.filter_selection) {
                 showFragmentDialog(new FilterDialogOptionModel());

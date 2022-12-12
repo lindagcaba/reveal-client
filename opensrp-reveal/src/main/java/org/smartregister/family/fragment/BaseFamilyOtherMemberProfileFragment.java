@@ -61,10 +61,6 @@ public abstract class BaseFamilyOtherMemberProfileFragment extends BaseRegisterF
         return presenter().getDefaultSortQuery();
     }
 
-    @Override
-    protected void startRegistration() {
-        (( BaseFamilyProfileActivity ) getActivity()).startFormActivity(Utils.metadata().familyMemberRegister.formName, null, (String)null);
-    }
 
     @Override
     public void setUniqueID(String s) {

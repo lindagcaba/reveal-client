@@ -364,8 +364,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
     protected abstract void onInitialization();
 
-    protected abstract void startRegistration();
-
     public void gotoNextPage() {
         clientsAdapter.nextPage();
         clientsAdapter.notifyDataSetChanged();
@@ -466,10 +464,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
             int i = view.getId();
             if (i == R.id.title_layout || i == R.id.btn_back_to_home) {
                 goBack();
-
-            } else if (i == R.id.register_client) {
-                startRegistration();
-
             } else if (i == R.id.filter_selection) {
                 showFragmentDialog(new FilterDialogOptionModel());
 

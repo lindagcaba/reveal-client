@@ -25,23 +25,6 @@ import timber.log.Timber;
 
 public abstract class BaseFamilyRegisterActivity extends BaseRegisterActivity implements FamilyRegisterContract.View {
 
-    @Override
-    public void startRegistration() {
-        startFormActivity(Utils.metadata().familyRegister.formName, null, (String)null);
-    }
-
-    @Override
-    public void startFormActivity(String formName, String entityId, String metaData) {
-        try {
-            if (mBaseFragment instanceof BaseFamilyRegisterFragment) {
-                String locationId = Utils.context().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID);
-                presenter().startForm(formName, entityId, metaData, locationId);
-            }
-        } catch (Exception e) {
-            Timber.e(e);
-            displayToast(getString(R.string.error_unable_to_start_form));
-        }
-    }
 
     @Override
     public void startFormActivity(JSONObject jsonForm) {

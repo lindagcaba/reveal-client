@@ -197,9 +197,6 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
         return null;//not used
     }
 
-    @Override
-    protected void startRegistration() {////not used on reveal/ adding points done on map
-    }
 
     @Override
     protected void onViewClicked(View view) {

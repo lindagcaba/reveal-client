@@ -94,12 +94,6 @@ public abstract class BaseFamilyOtherMemberProfileActivity extends BaseProfileAc
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == R.id.add_member) {
-            startFormActivity(Utils.metadata().familyMemberRegister.formName, null, (String)null);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

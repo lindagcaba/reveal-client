@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.collections.MapUtils;
 import org.smartregister.AllConstants;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
@@ -28,7 +27,6 @@ import org.smartregister.event.Listener;
 import org.smartregister.receiver.P2pProcessingStatusBroadcastReceiver;
 import org.smartregister.service.ZiggyService;
 import org.smartregister.util.Utils;
-import org.smartregister.view.controller.FormController;
 import org.smartregister.view.customcontrols.ProcessingInProgressSnackbar;
 
 import java.util.Map;
@@ -38,9 +36,6 @@ import timber.log.Timber;
 import static org.smartregister.AllConstants.ALERT_NAME_PARAM;
 import static org.smartregister.AllConstants.CloudantSync;
 import static org.smartregister.AllConstants.ENTITY_ID;
-import static org.smartregister.AllConstants.ENTITY_ID_PARAM;
-import static org.smartregister.AllConstants.FIELD_OVERRIDES_PARAM;
-import static org.smartregister.AllConstants.FORM_NAME_PARAM;
 import static org.smartregister.AllConstants.FORM_SUCCESSFULLY_SUBMITTED_RESULT_CODE;
 import static org.smartregister.event.Event.ON_LOGOUT;
 import static org.smartregister.util.Log.logInfo;
@@ -49,7 +44,6 @@ public abstract class SecuredActivity extends MultiLanguageActivity implements P
     public static final String LOG_TAG = "SecuredActivity";
     protected final int MENU_ITEM_LOGOUT = 2312;
     protected Listener<Boolean> logoutListener;
-    protected FormController formController;
     protected ZiggyService ziggyService;
     private String metaData;
     private OpenSRPClientBroadCastReceiver openSRPClientBroadCastReceiver;
@@ -76,7 +70,6 @@ public abstract class SecuredActivity extends MultiLanguageActivity implements P
             return;
         }
 
-        formController = new FormController(this);
         onCreation();
 
         // Intent replicationServiceIntent = new Intent(this, ReplicationIntentService.class);
@@ -156,41 +149,6 @@ public abstract class SecuredActivity extends MultiLanguageActivity implements P
 
     protected abstract void onResumption();
 
-    public void startFormActivity(String formName, String entityId, String metaData) {
-        launchForm(formName, entityId, metaData, FormActivity.class);
-    }
-
-    public void startFormActivity(String formName, String entityId, Map<String, String> metaData) {
-        String metaDataString = MapUtils.getString(metaData, FIELD_OVERRIDES_PARAM, "");
-
-        launchForm(formName, entityId, metaDataString, FormActivity.class);
-    }
-
-    public void startMicroFormActivity(String formName, String entityId, String metaData) {
-        launchForm(formName, entityId, metaData, MicroFormActivity.class);
-    }
-
-    private void launchForm(String formName, String entityId, String metaData, Class formType) {
-        this.metaData = metaData;
-
-        Intent intent = new Intent(this, formType);
-        intent.putExtra(FORM_NAME_PARAM, formName);
-        intent.putExtra(ENTITY_ID_PARAM, entityId);
-        addFieldOverridesIfExist(intent);
-        startActivityForResult(intent, FORM_SUCCESSFULLY_SUBMITTED_RESULT_CODE);
-    }
-
-    private void addFieldOverridesIfExist(Intent intent) {
-        if (hasMetadata()) {
-            Map<String, String> metaDataMap = new Gson()
-                    .fromJson(this.metaData, new TypeToken<Map<String, String>>() {
-                    }.getType());
-            if (metaDataMap.containsKey(FIELD_OVERRIDES_PARAM)) {
-                intent.putExtra(FIELD_OVERRIDES_PARAM, metaDataMap.get(FIELD_OVERRIDES_PARAM));
-            }
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,22 +176,7 @@ public abstract class SecuredActivity extends MultiLanguageActivity implements P
         return this.metaData != null && !this.metaData.equalsIgnoreCase("undefined");
     }
 
-    /**
-     * Called by CloudantSyncHandler when it receives a replication complete callback.
-     * CloudantSyncHandler takes care of calling this on the main thread.
-     */
-    public void replicationComplete() {
-        //Toast.makeText(getApplicationContext(), "Replication Complete", Toast.LENGTH_LONG).show();
-    }
 
-    /**
-     * Called by TasksModel when it receives a replication error callback.
-     * TasksModel takes care of calling this on the main thread.
-     */
-    public void replicationError() {
-        Timber.e(LOG_TAG, "error()");
-        //Toast.makeText(getApplicationContext(), "Replication Error", Toast.LENGTH_LONG).show();
-    }
 
     private void setupReplicationBroadcastReceiver() {
         // The filter's action is BROADCAST_ACTION

@@ -124,10 +124,6 @@ public class EventRegisterFragment extends BaseDrawerRegisterFragment implements
     }
 
     @Override
-    protected void startRegistration() {//not used
-    }
-
-    @Override
     protected void onViewClicked(View view) {
         EventRegisterDetails details = (EventRegisterDetails) view.getTag(R.id.patient_column);
         getPresenter().onEventSelected(details);

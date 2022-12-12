@@ -32,9 +32,6 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getBooleanExtra("START_REGISTRATION", false)) {
-            startRegistration();
-        }
     }
 
     @Override
@@ -57,9 +54,6 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
         return new Fragment[0];
     }
 
-    @Override
-    public void startFormActivity(String s, String s1, Map<String, String> map) {//not used
-    }
 
     @Override
     protected void registerBottomNavigation() {

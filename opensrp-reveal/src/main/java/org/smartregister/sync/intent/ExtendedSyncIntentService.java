@@ -11,7 +11,6 @@ import timber.log.Timber;
 
 public class ExtendedSyncIntentService extends BaseSyncIntentService {
 
-    private ActionService actionService = CoreLibrary.getInstance().context().actionService();
 
     public ExtendedSyncIntentService() {
         super("ExtendedSyncIntentService");
@@ -22,9 +21,6 @@ public class ExtendedSyncIntentService extends BaseSyncIntentService {
         try {
             super.onHandleIntent(workIntent);
             if (NetworkUtils.isNetworkAvailable()) {
-                if (!CoreLibrary.getInstance().getSyncConfiguration().disableActionService()) {
-                    actionService.fetchNewActions();
-                }
                 startSyncValidation();
             }
 

@@ -355,9 +355,6 @@ public abstract class RecyclerViewFragment extends
 
     protected abstract void onInitialization();
 
-    protected abstract void startRegistration();
-
-
     public void gotoNextPage() {
         if (clientAdapter.hasNextPage()) {
             clientAdapter.nextPageOffset();
@@ -646,9 +643,6 @@ public abstract class RecyclerViewFragment extends
             int i = view.getId();
             if (i == R.id.title_layout || i == R.id.btn_back_to_home) {
                 goBack();
-
-            } else if (i == R.id.register_client) {
-                startRegistration();
 
             } else if (i == R.id.filter_selection) {
                 showFragmentDialog(new FilterDialogOptionModel());

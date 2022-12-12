@@ -338,8 +338,6 @@ public abstract class BaseRegisterFragment extends RecyclerViewFragment implemen
     protected void onInitialization() {//Implement Abstract Method
     }
 
-    protected abstract void startRegistration();
-
     @Override
     protected void onCreation() {
         initializePresenter();

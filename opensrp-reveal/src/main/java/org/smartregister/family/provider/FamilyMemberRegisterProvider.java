@@ -29,7 +29,6 @@ import org.smartregister.view.customcontrols.FontVariant;
 import org.smartregister.view.dialog.FilterOption;
 import org.smartregister.view.dialog.ServiceModeOption;
 import org.smartregister.view.dialog.SortOption;
-import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
 import java.util.Set;
@@ -209,10 +208,7 @@ public class FamilyMemberRegisterProvider implements RecyclerViewProvider<Family
     public void onServiceModeSelected(ServiceModeOption serviceModeOption) {//Implement Abstract Method
     }
 
-    @Override
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        return null;
-    }
+
 
     @Override
     public LayoutInflater inflater() {

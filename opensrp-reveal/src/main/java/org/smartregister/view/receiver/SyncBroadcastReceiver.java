@@ -17,7 +17,6 @@ public class SyncBroadcastReceiver extends BroadcastReceiver {
         Timber.i(getClass().getSimpleName(),"Sync alarm triggered. Trying to Sync.");
 
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(context,
-                CoreLibrary.getInstance().context().actionService(),
                 CoreLibrary.getInstance().context().formSubmissionSyncService(),
                 new SyncProgressIndicator(),
                 CoreLibrary.getInstance().context().allFormVersionSyncService());

@@ -8,7 +8,6 @@ import org.smartregister.view.contract.SmartRegisterClients;
 import org.smartregister.view.dialog.FilterOption;
 import org.smartregister.view.dialog.ServiceModeOption;
 import org.smartregister.view.dialog.SortOption;
-import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 public interface SmartRegisterClientsProvider {
 
@@ -21,5 +20,4 @@ public interface SmartRegisterClientsProvider {
 
     void onServiceModeSelected(ServiceModeOption serviceModeOption);
 
-    OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData);
 }

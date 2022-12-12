@@ -103,11 +103,6 @@ public abstract class BaseFamilyProfileActivity extends BaseProfileActivity impl
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == R.id.add_member) {
-            startFormActivity(Utils.metadata().familyMemberRegister.formName, null, (String)null);
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -117,17 +112,6 @@ public abstract class BaseFamilyProfileActivity extends BaseProfileActivity impl
         presenter().fetchProfileData();
     }
 
-    @Override
-    public void startFormActivity(String formName, String entityId, String metaData) {
-        try {
-            String locationId = Utils.context().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID);
-            presenter().startForm(formName, entityId, metaData, locationId);
-
-        } catch (Exception e) {
-            Timber.e(e);
-            displayToast(R.string.error_unable_to_start_form);
-        }
-    }
 
     @Override
     public void startFormActivity(JSONObject jsonForm) {

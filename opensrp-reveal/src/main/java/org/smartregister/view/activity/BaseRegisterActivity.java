@@ -200,9 +200,6 @@ public abstract class BaseRegisterActivity extends SecuredNativeSmartRegisterAct
     }
 
     @Override
-    public abstract void startFormActivity(String formName, String entityId, Map<String, String> metaData);
-
-    @Override
     public abstract void startFormActivity(JSONObject form);
 
     @Override

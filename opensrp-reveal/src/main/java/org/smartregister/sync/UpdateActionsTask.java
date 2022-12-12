@@ -18,17 +18,15 @@ import static org.smartregister.util.Log.logInfo;
 
 public class UpdateActionsTask {
     private final LockingBackgroundTask task;
-    private ActionService actionService;
     private Context context;
     private FormSubmissionSyncService formSubmissionSyncService;
     private AllFormVersionSyncService allFormVersionSyncService;
     private AdditionalSyncService additionalSyncService;
 
-    public UpdateActionsTask(Context context, ActionService actionService,
+    public UpdateActionsTask(Context context,
                              FormSubmissionSyncService formSubmissionSyncService,
                              ProgressIndicator progressIndicator, AllFormVersionSyncService
                                      allFormVersionSyncService) {
-        this.actionService = actionService;
         this.context = context;
         this.formSubmissionSyncService = formSubmissionSyncService;
         this.allFormVersionSyncService = allFormVersionSyncService;
@@ -36,9 +34,6 @@ public class UpdateActionsTask {
         task = new LockingBackgroundTask(progressIndicator);
     }
 
-    public void setAdditionalSyncService(AdditionalSyncService additionalSyncService) {
-        this.additionalSyncService = additionalSyncService;
-    }
 
     public void updateFromServer(final AfterFetchListener afterFetchListener) {
         if (CoreLibrary.getInstance().context().IsUserLoggedOut()) {
@@ -50,7 +45,6 @@ public class UpdateActionsTask {
             public FetchStatus actionToDoInBackgroundThread() {
 
                 FetchStatus fetchStatusForForms = formSubmissionSyncService.sync();
-                FetchStatus fetchStatusForActions = CoreLibrary.getInstance().getSyncConfiguration().disableActionService() ? nothingFetched : actionService.fetchNewActions();
                 FetchStatus fetchStatusAdditional = additionalSyncService == null ? nothingFetched
                         : additionalSyncService.sync();
 
@@ -72,7 +66,7 @@ public class UpdateActionsTask {
                     }
                 }
 
-                if (fetchStatusForActions == fetched || fetchStatusForForms == fetched
+                if ( fetchStatusForForms == fetched
                         || fetchStatusAdditional == fetched) {
                     return fetched;
                 }

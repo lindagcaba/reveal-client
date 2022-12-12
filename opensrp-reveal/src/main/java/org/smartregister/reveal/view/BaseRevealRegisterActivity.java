@@ -22,16 +22,9 @@ public abstract class BaseRevealRegisterActivity extends BaseRegisterActivity {
         return new Fragment[0];
     }
 
-    @Override
-    public void startFormActivity(String s, String s1, Map<String, String> map) {//not used
-    }
 
     @Override
     public void startFormActivity(JSONObject jsonObject) {//not used
-    }
-
-    @Override
-    public void startRegistration() {//not used
     }
 
     @Override

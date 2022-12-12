@@ -24,7 +24,6 @@ import org.smartregister.view.contract.SmartRegisterClients;
 import org.smartregister.view.dialog.FilterOption;
 import org.smartregister.view.dialog.ServiceModeOption;
 import org.smartregister.view.dialog.SortOption;
-import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -108,10 +107,6 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
     public void onServiceModeSelected(ServiceModeOption serviceModeOption) {//not used
     }
 
-    @Override
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        return null;
-    }
 
     @Override
     public LayoutInflater inflater() {
