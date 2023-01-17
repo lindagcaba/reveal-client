@@ -20,6 +20,7 @@ import static org.smartregister.reveal.util.Constants.EventType.HABITAT_SURVEY_E
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.LSM_HOUSEHOLD_SURVEY_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.MDA_ONCHO_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.MDA_SURVEY_EVENT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.ABLE_TO_SPRAY_FIRST;
@@ -48,6 +49,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
@@ -374,9 +376,9 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
                 formName = JsonForm.NAMIBIA_ADD_STRUCTURE_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL_EN
-                    || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
+                    || BuildConfig.BUILD_COUNTRY == Country.SENEGAL ) {
                 formName = JsonForm.IRS_ADD_STRUCTURE_FORM;
-            } else if(BuildConfig.BUILD_COUNTRY == Country.MOZAMBIQUE){
+            } else if(BuildConfig.BUILD_COUNTRY == Country.MOZAMBIQUE || BuildConfig.BUILD_COUNTRY  == Country.MALI){
               formName = JsonForm.MDA_SURVEY_ADD_STRUCTURE_FORM;
             } else {
                 formName = JsonForm.ADD_STRUCTURE_FORM;
@@ -486,15 +488,25 @@ public class RevealJsonFormUtils {
         } else if(EventType.CDD_DRUG_WITHDRAWAL_EVENT.equals(encounterType)){
             formName = JsonForm.CDD_DRUG_WITHDRAWAL_FORM;
         } else if(EventType.CDD_DRUG_RECEIVED_EVENT.equals(encounterType)){
-            formName = JsonForm.CDD_DRUG_RECEIVED_FORM;
+            if(BuildConfig.BUILD_COUNTRY == Country.MALI){
+                formName = JsonForm.MALI_DRUG_RECEIVED_FORM;
+            } else {
+                formName = JsonForm.CDD_DRUG_RECEIVED_FORM;
+            }
         } else if(EventType.COUNTY_CDD_SUPERVISORY_EVENT.equals(encounterType)){
             formName = JsonForm.COUNTY_CDD_SUPERVISORY_FORM;
         } else if(BuildConfig.BUILD_COUNTRY == Country.MOZAMBIQUE && (Action.MDA_SURVEY.equals(taskCode) || MDA_SURVEY_EVENT.equals(encounterType))){
             formName = JsonForm.MDA_HOUSEHOLD_STATUS_MOZ_FORM;
+        } else if(BuildConfig.BUILD_COUNTRY == Country.MALI && (Action.MDA_ONCHOCERCIASIS_SURVEY.equals(taskCode) || MDA_ONCHO_EVENT.equals(encounterType))){
+            formName = JsonForm.MDA_ONCHO_SURVEY_FORM;
         } else if(BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && (Action.HABITAT_SURVEY.equals(taskCode) || HABITAT_SURVEY_EVENT.equals(encounterType))){
             formName = JsonForm.LSM_HABITAT_SURVEY_FORM_ZAMBIA;
         } else if(BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && (Action.LSM_HOUSEHOLD_SURVEY.equals(taskCode) || LSM_HOUSEHOLD_SURVEY_EVENT.equals(encounterType))){
             formName = JsonForm.LSM_HOUSEHOLD_SURVEY_ZAMBIA;
+        } else if(EventType.TREATMENT_OUTSIDE_HOUSEHOLD_EVENT.equals(encounterType)){
+            formName = JsonForm.TREATMENT_OUTSIDE_HOUSEHOLD_FORM;
+        } else if(EventType.ADVERSE_EVENTS_RECORD_EVENT.equals(encounterType)){
+            formName = JsonForm.ADVERSE_EVENTS_RECORD_FORM;
         }
         return formName;
     }
@@ -909,21 +921,23 @@ public class RevealJsonFormUtils {
             case JsonForm.CDD_DRUG_RECEIVED_FORM:
             case JsonForm.CDD_DRUG_WITHDRAWAL_FORM:
             case JsonForm.COUNTY_CDD_SUPERVISORY_FORM:
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+            case JsonForm.TREATMENT_OUTSIDE_HOUSEHOLD_FORM:
+            case JsonForm.MDA_ONCHO_SURVEY_FORM:
+            case JsonForm.ADVERSE_EVENTS_RECORD_FORM:
+            case JsonForm.MALI_DRUG_RECEIVED_FORM:
+                setDefaultValue(formJSON, HEALTH_WORKER_SUPERVISOR,
+                        RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,
-                        fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                        fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME), RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS,
                         fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.DRUG_REALLOCATEE),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                        RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                                 CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.CDD_BORROWED_FORM),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                        RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COUNTY_LIST, fieldsMap.get(JsonForm.COUNTY),
                         PreferencesUtil.getInstance().getCurrentOperationalArea());
@@ -933,7 +947,7 @@ public class RevealJsonFormUtils {
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,
                         fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                        RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 break;
             case JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA:
             case JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA_EN:
@@ -953,13 +967,13 @@ public class RevealJsonFormUtils {
                 }
                 break;
             case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                setDefaultValue(formJSON, HEALTH_WORKER_SUPERVISOR,
+                        RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,
                         fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                        RevealApplication.getInstance().getContext().allSharedPreferences()
+                                .fetchRegisteredANM());
             default:
                 break;
         }
